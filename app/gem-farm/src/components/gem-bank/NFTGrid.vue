@@ -1,5 +1,6 @@
 <template>
   <div class="nes-container with-title">
+    <div class="flep">
     <p class="title">{{ title }}</p>
     <slot />
     <div class="flex flex-wrap">
@@ -9,6 +10,7 @@
         :nft="nft"
         @selected="handleSelected"
       />
+    </div>
     </div>
   </div>
 </template>
@@ -35,4 +37,11 @@ export default defineComponent({
 });
 </script>
 
-<style scoped></style>
+<style>
+.flep{
+  background-color: black;
+}
+.title{
+  color : white;
+}
+</style>

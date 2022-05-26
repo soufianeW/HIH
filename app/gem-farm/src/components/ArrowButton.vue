@@ -1,11 +1,12 @@
 <template>
   <button :disabled="disabled">
     <img
-      src="../assets/play.png"
+      src="../assets/pls.png"
       alt="right"
-      :width="60"
-      :height="60"
+      :width="120"
+      :height="160"
       :class="{ left: left, disabled: disabled }"
+      
     />
   </button>
 </template>
@@ -27,6 +28,7 @@ export default defineComponent({
 button,
 img {
   outline: none !important;
+  height: 70px;
 }
 
 .left {

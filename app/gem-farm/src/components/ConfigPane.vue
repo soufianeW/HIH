@@ -1,23 +1,8 @@
 <template>
   <div class="flex justify-center mb-10">
-    <div class="nes-select is-dark flex-1">
-      <select required id="cluster" v-model="chosenCluster">
-        <option :value="Cluster.Mainnet">Mainnet</option>
-        <option :value="Cluster.Devnet">Devnet</option>
-        <option :value="Cluster.Testnet">Testnet</option>
-        <option :value="Cluster.Localnet">Localnet</option>
-      </select>
-    </div>
-    <div class="nes-select is-dark flex-1">
-      <select required id="wallet" v-model="chosenWallet">
-        <option class="text-gray-500" :value="null">Choose wallet..</option>
-        <option :value="WalletName.Phantom">Phantom</option>
-        <option :value="WalletName.Sollet">Sollet</option>
-        <option :value="WalletName.SolletExtension">Sollet Extension</option>
-        <option :value="WalletName.Solflare">Solflare</option>
-        <option :value="WalletName.SolflareWeb">Solflare Web</option>
-      </select>
-    </div>
+  <p id="wallet" v-if="!isHidden">
+  <label><input type="checkbox" name="wallets"  v-on:click="isHidden = true"  value="WalletName.Phantom" v-model="chosenWallet"><span>Connect Wallet</span></label>
+  </p>
   </div>
 </template>
 
@@ -26,9 +11,14 @@ import { computed, defineComponent } from 'vue';
 import { WalletName } from '@solana/wallet-adapter-wallets';
 import useCluster, { Cluster } from '@/composables/cluster';
 import useWallet from '@/composables/wallet';
+import { Wallet } from '@metaplex/js';
+
+
 
 export default defineComponent({
+
   setup() {
+
     // cluster
     const { cluster, setCluster, getClusterURL } = useCluster();
     const chosenCluster = computed({
@@ -46,12 +36,14 @@ export default defineComponent({
       get() {
         return getWalletName();
       },
-      set(newVal: WalletName | null) {
-        setWallet(newVal, getClusterURL());
+      set(newval: WalletName | null) {
+        setWallet(WalletName.Phantom, getClusterURL());
       },
     });
 
+
     return {
+      isHidden : false,
       Cluster,
       chosenCluster,
       WalletName,
@@ -61,4 +53,24 @@ export default defineComponent({
 });
 </script>
 
-<style scoped></style>
+<style>
+#wallet input[type="checkbox"] {
+  display: none;
+}
+
+#wallet span {
+  font: italic small-caps bold 16px/2 cursive;
+  display: inline-block;
+  padding: 10px;
+  text-transform: uppercase;
+  border: 2px solid #f50606;
+  border-radius: 3px;
+  color: #ee0606;
+  background-color: black;
+}
+
+#wallet input[type="checkbox"]:checked + span {
+  background-color: #441BA4;
+  color: white;
+}
+</style>

@@ -31,9 +31,9 @@
         >
           <div
             v-if="parseVaultLock()"
-            class="locked flex-col justify-center items-center align-center"
+            class="locked "
           >
-            <p class="mt-10">This vault is locked!</p>
+            <p class="mt-10">The Humans are meditating</p>
           </div>
         </NFTGrid>
       </div>

@@ -7,6 +7,7 @@
       :url="i.url"
       :class="{ active: path === i.url }"
     />
+    
   </nav>
 </template>
 
@@ -23,8 +24,8 @@ export default defineComponent({
 
     const menu = [
       { name: '/', url: '/' },
-      { name: 'FARM MANAGER', url: '/manager' },
-      { name: 'FARMER', url: '/farmer' },
+      { name: 'Buy HUMAN PASS', url: '/' },
+      { name: 'Meditation room', url: '/farmer' },
     ];
 
     return {

@@ -2,6 +2,8 @@ import { Connection, PublicKey } from '@solana/web3.js';
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token';
 import axios from 'axios';
 import { programs } from '@metaplex/js';
+import { ITokenData } from '../../../../../src/gem-common/account-utils';
+import { isString } from '@vue/shared';
 
 const {
   metadata: { Metadata },
@@ -12,6 +14,7 @@ export interface INFT {
   mint: PublicKey;
   onchainMetadata: unknown;
   externalMetadata: unknown;
+  symbol : any;
 }
 
 async function getTokensByOwner(owner: PublicKey, conn: Connection) {
@@ -40,11 +43,13 @@ async function getNFTMetadata(
     const metadataPDA = await Metadata.getPDA(mint);
     const onchainMetadata = (await Metadata.load(conn, metadataPDA)).data;
     const externalMetadata = (await axios.get(onchainMetadata.data.uri)).data;
+    const symbol = (await Metadata.load(conn, metadataPDA)).data;
     return {
       pubkey: pubkey ? new PublicKey(pubkey) : undefined,
       mint: new PublicKey(mint),
       onchainMetadata,
       externalMetadata,
+      symbol,
     };
   } catch (e) {
     console.log(`failed to pull metadata for token ${mint}`);
@@ -57,18 +62,18 @@ export async function getNFTMetadataForMany(
 ): Promise<INFT[]> {
   const promises: Promise<INFT | undefined>[] = [];
   tokens.forEach((t) => promises.push(getNFTMetadata(t.mint, conn, t.pubkey)));
-  const nfts = (await Promise.all(promises)).filter((n) => !!n);
+  const nfts = (await Promise.all(promises)).filter((n) => n?.symbol.data.symbol == "HIH");
   console.log(`found ${nfts.length} metadatas`);
 
-  return nfts as INFT[];
+  return nfts as INFT[]; 
 }
 
 export async function getNFTsByOwner(
   owner: PublicKey,
   conn: Connection
 ): Promise<INFT[]> {
-  const tokens = await getTokensByOwner(owner, conn);
+  const tokens = (await getTokensByOwner(owner, conn)) ;
   console.log(`found ${tokens.length} tokens`);
 
-  return await getNFTMetadataForMany(tokens, conn);
+  return (await getNFTMetadataForMany(tokens, conn));
 }

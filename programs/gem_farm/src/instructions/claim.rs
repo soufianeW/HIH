@@ -76,19 +76,18 @@ impl<'info> Claim<'info> {
             },
         )
     }
-
+////b2
     fn transfer_b_ctx(&self) -> CpiContext<'_, '_, '_, 'info, Transfer<'info>> {
         CpiContext::new(
             self.token_program.to_account_info(),
             Transfer {
-                from: self.reward_b_pot.to_account_info(),
-                to: self.reward_b_destination.to_account_info(),
-                authority: self.farm_authority.to_account_info(),
+            from: self.reward_b_pot.to_account_info(),
+            to: self.reward_b_destination.to_account_info(),
+            authority: self.farm_authority.to_account_info(),
             },
         )
     }
 }
-
 pub fn handler(ctx: Context<Claim>) -> Result<()> {
     // update accrued rewards before claiming
     let farm = &mut ctx.accounts.farm;
@@ -103,6 +102,8 @@ pub fn handler(ctx: Context<Claim>) -> Result<()> {
     let to_claim_b = farmer
         .reward_b
         .claim_reward(ctx.accounts.reward_b_pot.amount)?;
+
+
 
     // do the transfers
     if to_claim_a > 0 {

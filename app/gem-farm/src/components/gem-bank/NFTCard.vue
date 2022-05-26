@@ -2,17 +2,19 @@
   <div
     class="m-1 card flex justify-center"
     :class="{ 'card-selected': selected }"
-    @click="toggleSelect"
+    
   >
-    <img
+   <p class="NFTname"> <img
       :src="nft.externalMetadata.image"
       :alt="nft.onchainMetadata.data.name"
-    />
+
+    />{{nft.onchainMetadata.data.name}}<br><button class="butt" @click="toggleSelect">Select</button> </p>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
+import { findRarityPDA } from '../../../../../src/gem-bank/gem-bank.pda';
 export default defineComponent({
   props: {
     nft: { type: Object, required: true },
@@ -39,24 +41,57 @@ export default defineComponent({
 </script>
 
 <style scoped>
+.butt{
+  font: italic small-caps bold 14px/2 cursive;
+  padding: -2px;
+  text-transform: uppercase;
+  border: 2px solid #f50606;
+  border-radius: 3px;
+  color: #ee0606;
+  background-color: black;
+  width: 160px;
+  height: 30px;
+
+}
+.back{
+  
+  height: 50px;
+  background-color: red; /* Green */
+  border: solid;
+  color: black;
+  position: relative;
+  right : -50px;
+  top: 30px;
+  padding: 1px 10px;
+}
+.stake{
+  background-color: white;
+  color : black;
+  width :180px;
+}
+.NFTname{
+  text-align: center;
+  color : white;
+}
+
 img {
   max-width: 100%;
   max-height: 100%;
-  height: auto;
-  width: auto;
+  height: 190px;
+  width: 190px;
+  position: relative;
+  left: -1px;
 }
 
 .card {
-  width: 150px;
-  height: 150px;
+  width: 200px;
+  height: 320px;
 }
 
-.card:hover {
-  @apply border-4 border-solid border-gray-200;
-}
 
 .card-selected {
   @apply border-4 border-solid;
-  border-color: black !important;
+  border-color: red !important;
+  
 }
 </style>

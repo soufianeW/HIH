@@ -1,11 +1,5 @@
 <template>
-  <div class="nes-container with-title mb-10">
-    <p class="title">Welcome to Gem Bank</p>
-    <p>
-      This app is designed to illustrate the functionality of Gem Bank. It is
-      not production grade. Use at your own risk.
-    </p>
-  </div>
+  <body>
   <div class="flex flex-row">
     <div class="nes-container with-title flex-1 mr-5">
       <p class="title">Start/manage a bank</p>
@@ -27,6 +21,7 @@
       </router-link>
     </div>
   </div>
+  </body>
 </template>
 
 <script lang="ts">

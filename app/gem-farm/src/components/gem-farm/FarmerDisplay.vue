@@ -1,44 +1,24 @@
 <template>
-  <div class="nes-container with-title">
-    <p class="title">Your Staking Account</p>
-    <div class="mb-2">
-      state:
-      <p class="inline-block bg-yellow-200">
-        {{ parseFarmerState(farmerAcc) }}
-      </p>
-    </div>
-    <div class="mb-2">Your identity: {{ farmerAcc.identity.toBase58() }}</div>
-    <div class="mb-2">Associated vault: {{ farmerAcc.vault.toBase58() }}</div>
-    <div class="mb-2">Gems staked: {{ farmerAcc.gemsStaked }}</div>
-    <div class="mb-2">
-      Min staking ends: {{ parseDate(farmerAcc.minStakingEndsTs) }}
-    </div>
-    <div class="mb-5">
-      Cooldown ends: {{ parseDate(farmerAcc.cooldownEndsTs) }}
-    </div>
+<div>
 
-    <div class="flex mb-5">
-      <div class="flex-1 mr-5">
-        <FarmerRewardDisplay
-          :key="farmerAcc.rewardA"
-          :farmReward="farmAcc.rewardA"
-          :reward="farmerAcc.rewardA"
-          title="Reward A"
-        />
-      </div>
-      <div class="flex-1">
-        <FarmerRewardDisplay
-          :key="farmerAcc.rewardB"
-          :farmReward="farmAcc.rewardB"
-          :reward="farmerAcc.rewardB"
-          title="Reward B"
-        />
-      </div>
-    </div>
+</div>
+<div class="reward">
+  <div class="nes-container with-title">
+    <div class="mb-2">Humans meditating: {{ farmerAcc.gemsStaked }} </div>
+    <div class="mb-2">% of Humans meditating:  {{ (farmAcc.gemsStaked *100)/2}} % </div>
+    <FarmerRewardDisplay
+      :key="farmerAcc.rewardB"
+      :farmReward="farmAcc.rewardB"
+      :reward="farmerAcc.rewardB"
+      title="Reward B"
+    />
+    <div>
     <button class="nes-btn is-primary mb-5" @click="refreshFarmer">
       Refresh account
     </button>
+    </div>
   </div>
+</div>
 </template>
 
 <script lang="ts">
@@ -98,4 +78,41 @@ export default defineComponent({
 });
 </script>
 
-<style scoped></style>
+<style>
+.fit-picture {
+  
+    width: 200px;
+    position: relative;
+  top: 5px;
+  left: 40%;
+}
+  .reward{
+    font: italic small-caps bold 16px/2 cursive;
+    padding: -3px;
+    text-transform: uppercase;
+    border: 7px outset #ff6105;
+    border-radius: 3px;
+    color: #ee0606;
+    background-color: black;
+    text-align: center;
+    font-size: 24px;
+    padding: 2rem 1rem;
+    min-height: 3em;
+    width: 60%;
+    margin: auto;
+    min-width: 300px;
+    width: 400px;
+
+  }
+  .nes-container with-title{
+    width: 100%;
+    margin: 0 auto;
+  }
+  .mb-2{
+    height: 30px;
+    color : white;
+  }
+  div{
+   font-size: 20px;
+  }
+</style>

@@ -77,13 +77,14 @@ impl Farmer {
             return Err(error!(ErrorCode::MinStakingNotPassed));
         }
 
-        self.state = FarmerState::PendingCooldown;
+        self.state = FarmerState::Unstaked;
 
         let gems_unstaked = self.gems_staked;
         let rarity_points_unstaked = self.rarity_points_staked;
         self.gems_staked = 0; //no rewards will accrue during cooldown period
         self.rarity_points_staked = 0;
-        self.cooldown_ends_ts = now_ts.try_add(cooldown_period_sec)?;
+        self.min_staking_ends_ts = 0;
+        self.cooldown_ends_ts = 0;
 
         // msg!(
         //     "{} gems now cooling down for {}",

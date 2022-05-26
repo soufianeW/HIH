@@ -21,10 +21,10 @@ export default function useCluster() {
   const getClusterURL = (): string => clusterURLMapping[cluster.value];
 
   const getConnection = (committment?: Commitment): Connection =>
-    new Connection(getClusterURL(), committment ?? 'processed');
+    new Connection('https://api.devnet.solana.com', committment ?? 'processed');
 
   const setCluster = (newCluster: Cluster) => {
-    cluster.value = newCluster;
+    cluster.value = Cluster.Devnet;
     // capping at 20 chars due to security (not to expose the token)
     console.log(
       `Cluster updated,  now ${newCluster} (${getClusterURL().substr(0, 20)})`

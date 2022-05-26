@@ -1,6 +1,7 @@
 <template>
+<body>
   <ConfigPane />
-  <div v-if="!wallet" class="text-center">Pls connect (burner) wallet</div>
+  <div v-if="!wallet" class="text-center"></div>
   <div v-else>
     <!--if a bank exists-->
     <div v-if="bank">
@@ -21,6 +22,7 @@
       </button>
     </div>
   </div>
+</body>
 </template>
 
 <script lang="ts">
@@ -88,4 +90,9 @@ export default defineComponent({
 });
 </script>
 
-<style scoped></style>
+<style>
+  body {
+    background-image: url('http://madebyhumannft.com/wp-content/uploads/2021/12/IMG_5749.gif');
+    background-size: cover;
+  }
+</style>

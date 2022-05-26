@@ -23,7 +23,7 @@
           class="nes-btn is-primary mx-5"
           @click="moveNFTsOnChain"
         >
-          Move Gems!
+          Confirm
         </button>
       </div>
 
@@ -43,7 +43,7 @@
         </div>
         <!--right-->
         <NFTGrid
-          title="Your vault"
+          title="The Meditation Room "
           class="flex-1"
           :nfts="desiredVaultNFTs"
           @selected="handleVaultSelected"
@@ -52,7 +52,7 @@
             v-if="vaultLocked"
             class="locked flex-col justify-center items-center align-center"
           >
-            <p class="mt-10">This vault is locked!</p>
+            <p class="mt-10">The Humans are meditating</p>
           </div>
         </NFTGrid>
       </div>

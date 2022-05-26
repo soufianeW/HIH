@@ -1,16 +1,10 @@
 <template>
   <ConfigPane />
-  <div v-if="!wallet" class="text-center">Pls connect (burner) wallet</div>
+  <div v-if="!wallet" class="text-center"></div>
   <div v-else>
     <!--farm address-->
-    <div class="nes-container with-title mb-10">
-      <p class="title">Connect to a Farm</p>
-      <div class="nes-field mb-5">
-        <label for="farm">Farm address:</label>
-        <input id="farm" class="nes-input" v-model="farm" />
-      </div>
-    </div>
-
+   
+    <div class="containi">
     <div v-if="farmerAcc">
       <FarmerDisplay
         :key="farmerAcc"
@@ -21,19 +15,14 @@
         class="mb-10"
         @refresh-farmer="handleRefreshFarmer"
       />
+      
       <Vault
         :key="farmerAcc"
         class="mb-10"
         :vault="farmerAcc.vault.toBase58()"
         @selected-wallet-nft="handleNewSelectedNFT"
       >
-        <button
-          v-if="farmerState === 'staked' && selectedNFTs.length > 0"
-          class="nes-btn is-primary mr-5"
-          @click="addGems"
-        >
-          Add Gems (resets staking)
-        </button>
+        
         <button
           v-if="farmerState === 'unstaked'"
           class="nes-btn is-success mr-5"
@@ -48,28 +37,25 @@
         >
           End staking
         </button>
-        <button
-          v-if="farmerState === 'pendingCooldown'"
-          class="nes-btn is-error mr-5"
-          @click="endStaking"
-        >
-          End cooldown
-        </button>
+        
         <button class="nes-btn is-warning" @click="claim">
-          Claim {{ availableA }} A / {{ availableB }} B
+          Claim {{ availableA }} $HUMN
         </button>
       </Vault>
     </div>
     <div v-else>
       <div class="w-full text-center mb-5">
-        Farmer account not found :( Create a new one?
+        Welcome Human, seems like you found your way to the meditation room.
+        There's a lot waiting for you inside as well as another surprise to reward you for the time you spend meditating.
+        Become more $HUMN and get your ticket to Earth. 
       </div>
-      <div class="w-full text-center">
+      <div class="w-ful text-center">
         <button class="nes-btn is-primary" @click="initFarmer">
-          New Farmer
+          I'm ready
         </button>
       </div>
     </div>
+  </div>
   </div>
 </template>
 
@@ -102,7 +88,7 @@ export default defineComponent({
     });
 
     // --------------------------------------- farmer details
-    const farm = ref<string>();
+    const farm = 'YCKtYSYSNxs6JZxX7jWGd2BXaeMYyQZKzcuTLGFKZU8';
     const farmAcc = ref<any>();
 
     const farmerIdentity = ref<string>();
@@ -112,10 +98,7 @@ export default defineComponent({
     const availableA = ref<string>();
     const availableB = ref<string>();
 
-    //auto loading for when farm changes
-    watch(farm, async () => {
-      await freshStart();
-    });
+    
 
     const updateAvailableRewards = async () => {
       availableA.value = farmerAcc.value.rewardA.accruedReward
@@ -127,16 +110,16 @@ export default defineComponent({
     };
 
     const fetchFarn = async () => {
-      farmAcc.value = await gf.fetchFarmAcc(new PublicKey(farm.value!));
+      farmAcc.value = await gf.fetchFarmAcc(new PublicKey(farm));
       console.log(
-        `farm found at ${farm.value}:`,
+        `farm found at ${farm}:`,
         stringifyPKsAndBNs(farmAcc.value)
       );
     };
 
     const fetchFarmer = async () => {
       const [farmerPDA] = await findFarmerPDA(
-        new PublicKey(farm.value!),
+        new PublicKey(farm),
         getWallet()!.publicKey!
       );
       farmerIdentity.value = getWallet()!.publicKey?.toBase58();
@@ -165,32 +148,35 @@ export default defineComponent({
           await fetchFarn();
           await fetchFarmer();
         } catch (e) {
-          console.log(`farm with PK ${farm.value} not found :(`);
+          console.log(`farm with PK ${farm} not found :(`);
         }
       }
     };
 
     const initFarmer = async () => {
-      await gf.initFarmerWallet(new PublicKey(farm.value!));
+      await gf.initFarmerWallet(new PublicKey(farm));
       await fetchFarmer();
     };
 
     // --------------------------------------- staking
     const beginStaking = async () => {
-      await gf.stakeWallet(new PublicKey(farm.value!));
+      await gf.stakeWallet(new PublicKey(farm));
       await fetchFarmer();
       selectedNFTs.value = [];
     };
 
     const endStaking = async () => {
-      await gf.unstakeWallet(new PublicKey(farm.value!));
+      await gf.unstakeWallet(new PublicKey(farm));
+      await fetchFarmer();
+      selectedNFTs.value = [];
+      await gf.unstakeWallet(new PublicKey(farm));
       await fetchFarmer();
       selectedNFTs.value = [];
     };
 
     const claim = async () => {
       await gf.claimWallet(
-        new PublicKey(farm.value!),
+        new PublicKey(farm),
         new PublicKey(farmAcc.value.rewardA.rewardMint!),
         new PublicKey(farmAcc.value.rewardB.rewardMint!)
       );
@@ -215,7 +201,7 @@ export default defineComponent({
       creator: PublicKey
     ) => {
       await gf.flashDepositWallet(
-        new PublicKey(farm.value!),
+        new PublicKey(farm),
         '1',
         gemMint,
         gemSource,
@@ -263,4 +249,46 @@ export default defineComponent({
 });
 </script>
 
-<style scoped></style>
+<style>
+.w-full{
+  font: italic small-caps bold 16px/2 cursive;
+    padding: -3px;
+    text-transform: uppercase;
+    border: 7px outset #ff6105;
+    border-radius: 3px;
+    color: #ee0606;
+    background-color: black;
+    text-align: center;
+    font-size: 22px;
+}
+.nes-btn{
+  margin : 20px;
+  font: italic small-caps bold 21px/2 cursive;
+  padding: 5px;
+  text-transform: uppercase;
+  border: 2px solid #f50606;
+  border-radius: 3px;
+  color: #ee0606;
+  background-color: black;
+  width: 250px;
+}
+
+.animated-button::before {
+  content: '';
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+  background-color: #8592ad;
+  opacity: 0;
+  -webkit-transition: .2s opacity ease-in-out;
+  transition: .2s opacity ease-in-out;
+}
+
+.animated-button:hover::before {
+  opacity: 0.2;
+}
+
+  
+</style>

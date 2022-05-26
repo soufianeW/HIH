@@ -1,16 +1,7 @@
 <template>
   <!--control buttons-->
   <div class="mb-10 flex justify-center">
-    <button
-      v-if="
-        (toWalletNFTs && toWalletNFTs.length) ||
-        (toVaultNFTs && toVaultNFTs.length)
-      "
-      class="nes-btn is-primary mr-5"
-      @click="moveNFTsOnChain"
-    >
-      Move Gems!
-    </button>
+   
     <slot />
   </div>
 
@@ -29,30 +20,25 @@
       <ArrowButton
         :disabled="vaultLocked"
         class="my-2"
-        @click="moveNFTsFE(false)"
+        @click="moveNFTsOnChain"
       />
       <ArrowButton
         :disabled="vaultLocked"
         class="my-2"
         :left="true"
-        @click="moveNFTsFE(true)"
+        @click="moveNFTsOnChain"
       />
     </div>
 
     <!--right-->
     <NFTGrid
       v-if="bank && vault"
-      title="Your vault"
-      class="flex-1"
+      title="The Meditation Room"
+      class="flex-1 "
       :nfts="desiredVaultNFTs"
       @selected="handleVaultSelected"
     >
-      <div
-        v-if="vaultLocked"
-        class="locked flex-col justify-center items-center align-center"
-      >
-        <p class="mt-10">This vault is locked!</p>
-      </div>
+      
     </NFTGrid>
   </div>
 </template>
@@ -163,7 +149,6 @@ export default defineComponent({
       //populate wallet + vault nfts
       await Promise.all([populateWalletNFTs(), populateVaultNFTs()]);
     });
-
     // --------------------------------------- moving nfts
 
     const handleWalletSelected = (e: any) => {
@@ -205,7 +190,12 @@ export default defineComponent({
 
     //todo jam into single tx
     const moveNFTsOnChain = async () => {
-      for (const nft of toVaultNFTs.value) {
+      //push selected wallet nfts into desired vault
+        desiredVaultNFTs.value.push(...selectedWalletNFTs.value);
+        //remove selected wallet nfts from desired wallet
+        
+        removeManyFromList(selectedWalletNFTs.value, desiredWalletNFTs.value);
+      for (const nft of selectedWalletNFTs.value) {
         console.log(nft);
         const creator = new PublicKey(
           //todo currently simply taking the 1st creator
@@ -214,11 +204,15 @@ export default defineComponent({
         console.log('creator is', creator.toBase58());
         await depositGem(nft.mint, creator, nft.pubkey!);
       }
-      for (const nft of toWalletNFTs.value) {
+       desiredWalletNFTs.value.push(...selectedVaultNFTs.value);
+        //remove selected vault nfts from desired vault
+        removeManyFromList(selectedVaultNFTs.value, desiredVaultNFTs.value);
+      for (const nft of selectedVaultNFTs.value) {
         await withdrawGem(nft.mint);
       }
       await Promise.all([populateWalletNFTs(), populateVaultNFTs()]);
     };
+    
 
     //to vault = vault desired - vault current
     watch(
@@ -303,6 +297,20 @@ export default defineComponent({
 </script>
 
 <style scoped>
+
+div{
+   font-family: Papyrus, fantasy; font-size: 23px; font-style: normal; font-variant: normal; font-weight: 700; line-height: 25.3px; } h3 { font-family: Papyrus, fantasy; font-size: 14px; font-style: normal; font-variant: normal; font-weight: 700; line-height: 15.4px; } p { font-family: Papyrus, fantasy; font-size: 14px; font-style: normal; font-variant: normal; font-weight: 400; line-height: 20px; } blockquote { font-family: Papyrus, fantasy; font-size: 21px; font-style: normal; font-variant: normal; font-weight: 400; line-height: 30px; } pre { font-family: Papyrus, fantasy; font-size: 13px; font-style: normal; font-variant: normal; font-weight: 400; line-height: 18.5714px;
+}
+.flex-1{
+   font: italic small-caps bold 16px/2 cursive;
+  text-transform: uppercase;
+  border: 4px solid #f5e506;
+  border-radius: 10px;
+  color: #ee0606;
+  background-color: black;
+}
+
+
 .locked {
   @apply text-center bg-black text-white;
   width: 100%;
